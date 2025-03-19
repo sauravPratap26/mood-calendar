@@ -4,6 +4,7 @@
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
 body {
   background-color: #f8f8ff;
   height: 100vh;
@@ -12,6 +13,26 @@ body {
   align-items: center;
 }
 
+/* Main Layout */
+.main {
+  display: flex;
+  width: 600px;
+  min-height: 600px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Wrapper for Calendar */
+.calendarContainer {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow-y: auto;
+  max-height: 660px;
+}
+
+/* Calendar Head */
 .calendar-head {
   display: flex;
   justify-content: space-between;
@@ -40,7 +61,8 @@ body {
   border-radius: 30%;
 }
 
-.calendar ul {
+
+.calendarBody ul {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
@@ -49,20 +71,17 @@ body {
   font-size: 20px;
   background-color: #6a5acd;
 }
+
 .weeks {
   color: #fff;
 }
-.emoji {
-  font-size: 60px;
-  transition: transform 0.3s ease, filter 0.3s ease;
-  padding-left: 5px;
-  padding-right: 5px;
-}
 
-.emoji:hover {
-  transform: scale(1.3);
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
-  cursor: pointer;
+.days {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  height: auto;
+  flex-grow: 1;
 }
 
 .days li {
@@ -93,6 +112,30 @@ body {
   border-radius: 50%;
 }
 
+/* Mood Section */
+.mood {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #ffc0cb;
+  padding: 10px;
+}
+
+.emoji {
+  font-size: 60px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.emoji:hover {
+  transform: scale(1.3);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+  cursor: pointer;
+}
+
+/* Mood Summary Section */
 .summary {
   background-color: #008080;
   padding: 7px;
@@ -114,6 +157,7 @@ body {
   color: #fff;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
+
 .emojiSummary:hover {
   background-color: #f0cedf;
 }
@@ -121,37 +165,65 @@ body {
 .selectedMood {
   background-color: #ff69b4;
 }
-.main {
-  display: flex;
-  width: 600px;
-  min-height: 600px;
-  border-radius: 10px;
-  overflow: hidden;
+
+/* Hiding the calendar when a mood is clicked */
+.hidden {
+  display: none;
 }
 
-.calendar {
+.calendarContainer {
   flex: 5;
   display: flex;
   flex-direction: column;
   height: auto;
   overflow-y: auto;
   max-height: 660px;
-  /* background-color: red; */
 }
 
-.mood {
-  /* flex: 1; */
+/* Keep the box dimensions same */
+.calendarBody {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #ffc0cb;
+  height: 500px;
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0ff;
+  overflow-y: auto; /* Allow scrolling inside */
+  border: 2px solid #6a5acd;
+  border-radius: 10px;
 }
 
-.days {
-  display: flex;
-  flex-wrap: wrap;
+/* Grid for Mood Tiles */
+.moodGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Dynamic grid */
+  gap: 10px;
   padding: 10px;
-  height: auto;
-  flex-grow: 1;
+  width: 100%;
+}
+
+/* Mood Tiles */
+.moodTile {
+  background-color: #ff69b4;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.moodTile:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* Empty Message */
+.emptyMessage {
+  text-align: center;
+  font-size: 18px;
+  color: #a9a9a9;
+  font-weight: bold;
+  margin-top: 20px;
 }

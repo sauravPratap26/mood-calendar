@@ -1,12 +1,11 @@
 let date = new Date(),
   currYear = date.getFullYear(),
   currMonth = date.getMonth();
-
-let unmodifiedMonth = date.getMonth();
-let unmodifiedYear = date.getFullYear();
 let selectedDate = 0;
 let selectedMonth = 0;
-let selectedYear = 2000;
+let selectedYear = 0;
+let unmodifiedMonth = date.getMonth();
+let unmodifiedYear = date.getFullYear();
 let prevNextIcon = document.querySelectorAll(".arrows");
 const months = [
   "January",
@@ -26,8 +25,10 @@ const months = [
 let moodsSummary = [];
 
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Friday", "Saturday"];
-const daysTag = document.querySelector(".days");
 const renderCalendar = () => {
+  const daysTag = document.querySelector(".days");
+  console.log("inside");
+
   let firstDayofMonth = new Date(currYear, currMonth, 1).getDay();
   let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate();
   let lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay();
@@ -67,6 +68,7 @@ const renderCalendar = () => {
 
   daysTag.innerHTML = dateTag;
 
+  console.log("Updated .days:", daysTag.innerHTML);
   let currMonthYear = document.querySelector(".current-date");
   currMonthYear.textContent = `${months[currMonth]}, ${currYear}`;
   let dateSummary = document.querySelector(".dateSummary");
@@ -74,53 +76,18 @@ const renderCalendar = () => {
     months[unmodifiedMonth]
   } ${unmodifiedYear}`;
 };
-renderCalendar();
 
-document.querySelector(".days").addEventListener("click", (dateClicked) => {
-  selectedDate = parseInt(dateClicked.target.textContent);
-  let isInactive = dateClicked.target.classList.contains("inactive");
-  selectedMonth = currMonth;
-  selectedYear = currYear;
+const emojiSummaryBox = (selectedDate, selectedMonth, selectedYear) => {
+  const emojiBox = document.querySelector(".emojiSummaryBox");
+  const newEmojiBox = emojiBox.cloneNode(true);
+  emojiBox.parentNode.replaceChild(newEmojiBox, emojiBox);
 
-  if (isInactive) {
-    if (selectedDate > 20) {
-      selectedMonth = currMonth - 1;
-      if (selectedMonth < 0) {
-        selectedMonth = 11;
-        selectedYear = currYear - 1;
-      }
-    } else {
-      selectedMonth = currMonth + 1;
-      if (selectedMonth > 11) {
-        selectedMonth = 0;
-        selectedYear = currYear + 1;
-      }
-    }
-  }
-  let dateSummary = document.querySelector(".dateSummary");
-  dateSummary.textContent = `Date Selected: ${selectedDate} ${months[selectedMonth]} ${selectedYear}`;
-  document.querySelector(".selectedMood")?.classList.remove("selectedMood");
-  let existingEntry = moodsSummary.find(
-    (entry) =>
-      entry.selectedDate == selectedDate &&
-      entry.selectedMonth == selectedMonth &&
-      entry.selectedYear == selectedYear
-  );
-  if (existingEntry) {
-    let foundMood = document.getElementById(existingEntry.mood);
-    foundMood.classList.add("selectedMood");
-  }
-});
-
-document
-  .querySelector(".emojiSummaryBox")
-  .addEventListener("click", (emojiSummaryClicked) => {
+  newEmojiBox.addEventListener("click", (emojiSummaryClicked) => {
     let clickedElement = emojiSummaryClicked.target;
 
     if (!clickedElement.classList.contains("emojiSummary")) return;
 
     document.querySelector(".selectedMood")?.classList.remove("selectedMood");
-
     clickedElement.classList.add("selectedMood");
 
     let existingEntry = moodsSummary.find(
@@ -143,7 +110,48 @@ document
     }
     console.log(moodsSummary);
   });
+};
+const renderSummary = () => {
+  document.querySelector(".days").addEventListener("click", (dateClicked) => {
+    selectedDate = parseInt(dateClicked.target.textContent);
+    let isInactive = dateClicked.target.classList.contains("inactive");
+    selectedMonth = currMonth;
+    selectedYear = currYear;
 
+    if (isInactive) {
+      if (selectedDate > 20) {
+        selectedMonth = currMonth - 1;
+        if (selectedMonth < 0) {
+          selectedMonth = 11;
+          selectedYear = currYear - 1;
+        }
+      } else {
+        selectedMonth = currMonth + 1;
+        if (selectedMonth > 11) {
+          selectedMonth = 0;
+          selectedYear = currYear + 1;
+        }
+      }
+    }
+    let dateSummary = document.querySelector(".dateSummary");
+    dateSummary.textContent = `Date Selected: ${selectedDate} ${months[selectedMonth]} ${selectedYear}`;
+    document.querySelector(".selectedMood")?.classList.remove("selectedMood");
+    let existingEntry = moodsSummary.find(
+      (entry) =>
+        entry.selectedDate == selectedDate &&
+        entry.selectedMonth == selectedMonth &&
+        entry.selectedYear == selectedYear
+    );
+    if (existingEntry) {
+      let foundMood = document.getElementById(existingEntry.mood);
+      foundMood.classList.add("selectedMood");
+    }
+    emojiSummaryBox(selectedDate, selectedMonth, selectedYear);
+  });
+};
+renderCalendar();
+renderSummary();
+emojiSummaryBox(date.getDate(), currMonth, currYear);
 
 prevNextIcon.forEach((arrow) => {
   arrow.addEventListener("click", () => {
@@ -157,4 +165,63 @@ prevNextIcon.forEach((arrow) => {
     }
     renderCalendar();
   });
+});
+
+document.querySelector(".mood").addEventListener("click", (moodHistory) => {
+  console.log("Clicked:", moodHistory.target.id);
+
+  let calendarContainer = document.querySelector(".calendarContainer");
+
+  if (moodHistory.target.id === "CALENDAR") {
+    // Reset calendarBody to its original structure
+    let calendarDiv = document.querySelector(".calendarBody");
+    calendarDiv.innerHTML = `
+      <ul class="weeks">
+        <li>Sun</li>
+        <li>Mon</li>
+        <li>Tue</li>
+        <li>Wed</li>
+        <li>Thu</li>
+        <li>Fri</li>
+        <li>Sat</li>
+      </ul>
+      <ul class="days mannn"></ul>
+    `;
+
+    daysTag = document.querySelector(".days");
+    renderCalendar();
+    renderSummary();
+    return;
+  }
+
+  let calendarDiv = document.querySelector(".calendarBody");
+  calendarDiv.innerHTML = "";
+
+  let filteredMood = moodsSummary.filter(
+    (data) => data.mood === moodHistory.target.id.toLowerCase()
+  );
+
+  console.log("Filtered Mood Data:", filteredMood);
+
+  if (filteredMood.length === 0) {
+    let emptyMessage = document.createElement("p");
+    emptyMessage.textContent = "No data available";
+    emptyMessage.classList.add("emptyMessage");
+    calendarDiv.appendChild(emptyMessage);
+    return;
+  }
+
+  let moodGrid = document.createElement("div");
+  moodGrid.classList.add("moodGrid");
+
+  filteredMood.forEach((filtered) => {
+    let tile = document.createElement("div");
+    tile.classList.add("moodTile");
+    tile.textContent = `${filtered.selectedDate} ${
+      months[filtered.selectedMonth]
+    } ${filtered.selectedYear}`;
+    moodGrid.appendChild(tile);
+  });
+
+  calendarDiv.appendChild(moodGrid);
 });

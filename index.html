@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="main">
-      <div class="calendar">
+      <div class="calendarContainer">  <!-- Renamed the outer wrapper -->
         <div class="calendar-head">
           <p class="current-date">23 JUNE</p>
           <div class="arrowBox">
@@ -16,7 +16,7 @@
             <span id="next" class="arrows">></span>
           </div>
         </div>
-        <div class="calendar">
+        <div class="calendarBody">  <!-- Renamed this div -->
           <ul class="weeks">
             <li>Sun</li>
             <li>Mon</li>
@@ -40,13 +40,14 @@
         </div>
       </div>
       <div class="mood">
-        <div class="emoji">😄</div>
-        <div class="emoji">😐</div>
-        <div class="emoji">🙁</div>
-        <div class="emoji">😡</div>
-        <div class="emoji">🗓️</div>
+        <div class="emoji" id="HAPPY">😄</div>
+        <div class="emoji" id="NEUTRAL">😐</div>
+        <div class="emoji" id="GLOOMY">🙁</div>
+        <div class="emoji" id="ANGRY">😡</div>
+        <div class="emoji" id="CALENDAR">🗓️</div>
       </div>
     </div>
+    
     <script src="index.js"></script>
   </body>
 </html>
