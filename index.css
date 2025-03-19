@@ -12,7 +12,6 @@ body {
   align-items: center;
 }
 
-
 .calendar-head {
   display: flex;
   justify-content: space-between;
@@ -20,29 +19,28 @@ body {
   padding: 20px;
 }
 
-.current-date{
+.current-date {
   font-size: 24px;
   font-weight: 600;
 }
 
-.arrowBox{
+.arrowBox {
   display: flex;
-  gap:15px
+  gap: 15px;
 }
 
-.arrows{
+.arrows {
   font-size: 24px;
   font-weight: 500;
   cursor: pointer;
 }
 
-.arrows:hover{
+.arrows:hover {
   background-color: #ffc0cb;
   border-radius: 30%;
 }
 
-
-.calendar ul{
+.calendar ul {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
@@ -51,7 +49,7 @@ body {
   font-size: 20px;
   background-color: #6a5acd;
 }
-.weeks{
+.weeks {
   color: #fff;
 }
 .emoji {
@@ -67,9 +65,8 @@ body {
   cursor: pointer;
 }
 
-
 .days li {
-  width: calc(100% / 7); 
+  width: calc(100% / 7);
   height: 50px;
   display: flex;
   align-items: center;
@@ -79,8 +76,13 @@ body {
   transition: 0.3s;
 }
 
+.days li:hover {
+  font-weight: 600;
+  transform: scale(1.3);
+}
+
 .days li.inactive {
-  color: #a9a9a9; 
+  color: #a9a9a9;
   width: calc(100% / 7);
 }
 
@@ -93,32 +95,30 @@ body {
 
 .summary {
   background-color: #008080;
-  padding: 7px; 
-  
+  padding: 7px;
 }
 
-
-.dateSummary, .moodSummary {
+.dateSummary,
+.moodSummary {
   font-size: 24px;
   color: #fff;
 }
 
-.emojiSummaryBox{
-display: flex;
-flex-direction: column;
+.emojiSummaryBox {
+  display: flex;
+  flex-direction: column;
 }
 
-.emojiSummary{
+.emojiSummary {
   font-size: 18px;
   color: #fff;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
-.emojiSummary:hover{
+.emojiSummary:hover {
   background-color: #f0cedf;
-  
 }
 
-.selectedMood{
+.selectedMood {
   background-color: #ff69b4;
 }
 .main {
@@ -152,6 +152,6 @@ flex-direction: column;
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  height: auto; 
-  flex-grow: 1; 
+  height: auto;
+  flex-grow: 1;
 }
