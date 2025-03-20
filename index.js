@@ -24,22 +24,28 @@ const months = [
 
 let moodsSummary = [];
 
+const saveToLocalStorage = () => {
+    localStorage.setItem("moodsSummary", JSON.stringify(moodsSummary));
+  };
+
+  const loadFromLocalStorage = () => {
+    const storedMoods = localStorage.getItem("moodsSummary");
+    if (storedMoods) {
+      moodsSummary = JSON.parse(storedMoods);
+      console.log("Loaded moods from localStorage:", moodsSummary);
+    }
+  };
+loadFromLocalStorage()  
+  
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Friday", "Saturday"];
 const renderCalendar = () => {
   const daysTag = document.querySelector(".days");
-  console.log("inside");
 
   let firstDayofMonth = new Date(currYear, currMonth, 1).getDay();
   let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate();
   let lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay();
   let lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate();
 
-  console.log({
-    firstDayofMonth,
-    lastDateofMonth,
-    lastDayofMonth,
-    lastDateofLastMonth,
-  });
   let dateTag = "";
 
   for (let i = firstDayofMonth; i > 0; i--) {
@@ -68,7 +74,6 @@ const renderCalendar = () => {
 
   daysTag.innerHTML = dateTag;
 
-  console.log("Updated .days:", daysTag.innerHTML);
   let currMonthYear = document.querySelector(".current-date");
   currMonthYear.textContent = `${months[currMonth]}, ${currYear}`;
   let dateSummary = document.querySelector(".dateSummary");
@@ -82,6 +87,18 @@ const emojiSummaryBox = (selectedDate, selectedMonth, selectedYear) => {
   const newEmojiBox = emojiBox.cloneNode(true);
   emojiBox.parentNode.replaceChild(newEmojiBox, emojiBox);
 
+  let existingEntry = moodsSummary.find(
+    (entry) =>
+      entry.selectedDate == selectedDate &&
+      entry.selectedMonth == selectedMonth &&
+      entry.selectedYear == selectedYear
+  );
+  if (existingEntry) {
+    const moodElement = newEmojiBox.querySelector(`#${existingEntry.mood}`);
+    if (moodElement) {
+      moodElement.classList.add("selectedMood");
+    }
+  }
   newEmojiBox.addEventListener("click", (emojiSummaryClicked) => {
     let clickedElement = emojiSummaryClicked.target;
 
@@ -100,7 +117,6 @@ const emojiSummaryBox = (selectedDate, selectedMonth, selectedYear) => {
     if (existingEntry) {
       existingEntry.mood = clickedElement.id;
     } else {
-      console.log("here");
       moodsSummary.push({
         selectedDate: selectedDate,
         selectedMonth: selectedMonth,
@@ -108,7 +124,7 @@ const emojiSummaryBox = (selectedDate, selectedMonth, selectedYear) => {
         mood: clickedElement.id,
       });
     }
-    console.log(moodsSummary);
+    saveToLocalStorage()
   });
 };
 const renderSummary = () => {
@@ -144,7 +160,9 @@ const renderSummary = () => {
     );
     if (existingEntry) {
       let foundMood = document.getElementById(existingEntry.mood);
-      foundMood.classList.add("selectedMood");
+      if (foundMood) {
+        foundMood.classList.add("selectedMood");
+      }
     }
     emojiSummaryBox(selectedDate, selectedMonth, selectedYear);
   });
@@ -168,7 +186,6 @@ prevNextIcon.forEach((arrow) => {
 });
 
 document.querySelector(".mood").addEventListener("click", (moodHistory) => {
-  console.log("Clicked:", moodHistory.target.id);
 
   let calendarContainer = document.querySelector(".calendarContainer");
 
@@ -201,7 +218,6 @@ document.querySelector(".mood").addEventListener("click", (moodHistory) => {
     (data) => data.mood === moodHistory.target.id.toLowerCase()
   );
 
-  console.log("Filtered Mood Data:", filteredMood);
 
   if (filteredMood.length === 0) {
     let emptyMessage = document.createElement("p");
